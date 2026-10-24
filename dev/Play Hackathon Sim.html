@@ -4872,6 +4872,12 @@ function lxRunJs(code, test){   // runs the learner's code in a throw-away worke
     t = setTimeout(() => fin({timeout:true}), 3000);
   });
 }
+// `ls somename` where somename is not in this step's listing: a real terminal says so instead of staying silent.
+function lxLsMissing(v, s){
+  const arg = v.split(' ').slice(1).find(t => t && !t.startsWith('-')); if (!arg || /^[.~\/]/.test(arg) || /[\/*?]/.test(arg)) return '';
+  const known = new Set(String((s.out || []).join(' ')).split(/\s+/).concat((s.near || []).flatMap(n => (n[2] || []).join(' ').split(/\s+/))));
+  return known.has(arg) ? '' : arg;
+}
 const LX_KIND = {
   read: {draw(){}, check(){}},
   write: {   // type a short function. Pure JavaScript with a stored test is RUN in a throw-away worker; everything else is compared with the model answer and ticked by the learner (the page cannot run Python, SQL, TypeScript or React).
@@ -4987,7 +4993,7 @@ const LX_KIND = {
       if (lxMatch(v, s.ok)){ put(s.out || []); inp.disabled = true; lxPass(s.why); t.scrollTop = t.scrollHeight; return; }
       const n = (s.near || []).find(([re]) => re.test(v));
       const w = v.split(' ')[0];
-      put(n && n[2] ? n[2] : /^(ls|cd|pwd|cat|head|tail|wc|grep|git|python|mkdir|echo|clear|claude)$/.test(w) ? [] : ['! bash: '+w+': command not found']);
+      put(n && n[2] ? n[2] : w === 'ls' && lxLsMissing(v, s) ? ['ls: cannot access \''+lxLsMissing(v, s)+'\': No such file or directory'] : /^(ls|cd|pwd|cat|head|tail|wc|grep|git|python|mkdir|echo|clear|claude)$/.test(w) ? [] : ['! bash: '+w+': command not found']);
       t.scrollTop = t.scrollHeight; lxMiss(n ? n[1] : s.no || 'Not the command this step needs. Read the question again, or press Hint.');
       inp.focus();
     },

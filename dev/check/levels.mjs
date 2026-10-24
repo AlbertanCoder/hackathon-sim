@@ -184,6 +184,20 @@ ok(/NOT PASSED|PASSED/.test((await ls()).step) && await js(`JSON.parse(localStor
     ok((await ls()).passed === true, 'a command typed with extra spaces is accepted');
   } else ok(false, 'a cmd step with answer "ls -a" exists for the spacing check');
 }
+// (4b) a practice terminal answers like a real one: ls of a name that is not there says so
+{
+  let found = null;
+  for (const m of course) for (const l of m.lessons) (l.steps || []).forEach((st, i) => { if (!found && st.t === 'cmd' && st.ans === 'ls') found = { id: l.id, i }; });
+  ok(!!found, 'a cmd step with answer "ls" exists for the missing-name check');
+  if (found) {
+    await js(`(() => { const p = JSON.parse(localStorage.getItem('hsim-learn') || '{}'); p.pos = Object.assign(p.pos || {}, {['${found.id}']: ${found.i}}); p.at = {id: '${found.id}', i: ${found.i}}; localStorage.setItem('hsim-learn', JSON.stringify(p)); })()`);
+    await sim(`lesson(${JSON.stringify(found.id)})`); await sleep(150);
+    await sim(`lxAnswer('ls pwd')`); await sleep(100);
+    ok((await js(`document.getElementById('lx-term').innerText`)).includes("ls: cannot access 'pwd': No such file or directory"), 'ls of a name that is not there prints the real error');
+    await sim(`lxAnswer('ls')`); await sleep(100);
+    ok((await ls()).passed === true, 'the right command still passes after a wrong one');
+  }
+}
 // (5) XP: a lesson is worth 100, a project 150 and a final test 150 (no study days, no hands-on ticks)
 await js(`localStorage.setItem('hsim-learn', JSON.stringify({done: {'d-speed': 1, 'd-project': 1, 'd-exam': 1}, days: [], real: {}, quests: [], pos: {}, exam: {}}))`);
 await js(`location.hash = '#course'`); await cdp('Page.reload'); await sleep(1500);
