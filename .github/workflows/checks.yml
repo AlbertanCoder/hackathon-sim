@@ -1,0 +1,54 @@
+# Runs every check on each push that touches the course source (the dev/ folder) and on pull requests.
+# The page served by GitHub Pages is the repo-root index.html: this also checks it is exactly the built copy that passed.
+name: checks
+on:
+  push:
+    paths: ['dev/**', '.github/workflows/checks.yml', 'index.html']
+  pull_request:
+  workflow_dispatch:
+jobs:
+  quick:
+    runs-on: windows-latest
+    defaults: { run: { shell: bash, working-directory: dev } }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 24 }
+      - name: the page on GitHub Pages is the built copy
+        working-directory: .
+        run: cmp "dev/Play Hackathon Sim.html" index.html
+      - name: static rules (ids, privacy, zoom, rubric)
+        run: |
+          node check/ids.mjs
+          node check/page-rules.mjs
+          node check/rubric.mjs
+      - name: every lesson step through the real page
+        run: |
+          node check/lessons-audit.mjs
+          node check/levels.mjs
+          node check/learn.mjs
+      - name: the Python runner on the Python steps (Pyodide, from the pyodide/ folder)
+        run: node check/pyrun.mjs
+  screens:
+    runs-on: windows-latest
+    defaults: { run: { shell: bash, working-directory: dev } }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 24 }
+      - name: the story game, drills and terminals
+        run: |
+          node check/check.mjs
+          node check/drills.mjs
+          node check/full-run.mjs
+          node check/live-terminal.mjs
+      - name: layout at phone and laptop sizes
+        run: |
+          node check/audit.mjs
+          node check/shots.mjs
+          node check/shots-nav.mjs
+          node check/sweep.mjs
+      - name: Python lessons and the for-anyone rules
+        run: |
+          node check/py-final.mjs
+          node check/for-anyone.mjs

@@ -1,0 +1,20 @@
+# Once a month (and on demand): re-run every code example in the lessons for real and check every outside link.
+# Model names, prices, free tiers and docs pages change; a failure here means a lesson went stale.
+name: monthly-facts
+on:
+  schedule: [{ cron: '0 9 1 * *' }]
+  workflow_dispatch:
+jobs:
+  facts:
+    runs-on: windows-latest
+    defaults: { run: { shell: bash, working-directory: dev } }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 24 }
+      - uses: actions/setup-python@v7
+        with: { python-version: '3.12' }
+      - name: lessons of Levels 4 to 12 (runs, answers, links)
+        run: python -I check/levels-facts.py 'C:/w1'
+      - name: Python lessons on the public practice repo
+        run: python -I check/practice-facts.py 'C:/w2'

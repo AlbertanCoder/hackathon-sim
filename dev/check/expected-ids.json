@@ -1,0 +1,154 @@
+{
+ "term": [
+  "t-where",
+  "t-cd",
+  "t-read",
+  "t-grep",
+  "t-errors",
+  "t-fix",
+  "p-term"
+ ],
+ "git": [
+  "g-why",
+  "g-commit",
+  "g-undo",
+  "g-team",
+  "g-branch",
+  "p-git"
+ ],
+ "claude": [
+  "c-ask",
+  "c-plan",
+  "c-diff",
+  "c-test",
+  "c-undo",
+  "p-claude"
+ ],
+ "power": [
+  "k-memory",
+  "k-perms",
+  "k-skills",
+  "k-agents",
+  "k-hooks",
+  "k-verify",
+  "k-boss"
+ ],
+ "hack": [
+  "h-plan",
+  "h-pitch",
+  "h-judges",
+  "h-rules",
+  "h-people",
+  "h-dayof",
+  "p-hack"
+ ],
+ "sky": [
+  "s-data",
+  "s-what",
+  "s-pilot",
+  "s-anykit"
+ ],
+ "python": [
+  "py-return",
+  "py-args",
+  "py-guard",
+  "py-write",
+  "py-loops",
+  "py-try",
+  "py-files",
+  "py-imports",
+  "py-pytest",
+  "py-class",
+  "py-docs"
+ ],
+ "dsa": [
+  "d-speed",
+  "d-lookup",
+  "d-stack",
+  "d-recursion",
+  "d-search",
+  "d-graph",
+  "d-project",
+  "d-exam"
+ ],
+ "net": [
+  "n-bits",
+  "n-process",
+  "n-files",
+  "n-network",
+  "n-http",
+  "n-concurrent",
+  "n-project",
+  "n-exam"
+ ],
+ "web": [
+  "w-html",
+  "w-js",
+  "w-dom",
+  "w-node",
+  "w-fetch",
+  "w-react",
+  "w-project",
+  "w-exam"
+ ],
+ "data": [
+  "q-sql",
+  "q-design",
+  "q-api",
+  "q-env",
+  "q-deploy",
+  "q-security",
+  "q-project",
+  "q-exam"
+ ],
+ "llmapi": [
+  "a-first",
+  "a-prompts",
+  "a-tools",
+  "a-context",
+  "a-rag",
+  "a-agents",
+  "a-project",
+  "a-exam"
+ ],
+ "llm": [
+  "m-math",
+  "m-tokens",
+  "m-predict",
+  "m-embed",
+  "m-learn",
+  "m-attention",
+  "m-real",
+  "m-project",
+  "m-exam"
+ ],
+ "swe": [
+  "e-codebase",
+  "e-design",
+  "e-tests",
+  "e-review",
+  "e-system",
+  "e-project",
+  "e-exam"
+ ],
+ "hired": [
+  "h-github",
+  "h-resume",
+  "h-roles",
+  "h-interview",
+  "h-ai",
+  "h-project",
+  "h-exam"
+ ],
+ "ml": [
+  "x-ml",
+  "x-eval",
+  "x-pipeline",
+  "x-docker",
+  "x-cloud",
+  "x-project",
+  "x-exam",
+  "x-ts"
+ ],
+ "all": []
+}
