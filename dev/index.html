@@ -3501,11 +3501,16 @@ document.querySelectorAll('.dpad button').forEach(b=>{
 $('abtn').addEventListener('pointerdown', e=>{ e.preventDefault(); if (D) advance(); else interact(); });
 function renderMute(){ $('mute').textContent = muted ? 'Sound off' : 'Sound on'; }
 /* ---------- no zoom ---------- */
-// touch-action turns pinch and double-tap zoom off, but Safari on iPhone starts its own pinch gestures, so cancel those as well.
-// If the page is zoomed in already (Safari can bring an old zoom back on reload), let the pinch through so it can be zoomed back out.
-let pinchOk = false;
-document.addEventListener('gesturestart', e=>{ pinchOk = (window.visualViewport?.scale || 1) > 1.01; if (!pinchOk) e.preventDefault(); });
-document.addEventListener('gesturechange', e=>{ if (!pinchOk) e.preventDefault(); });
+// touch-action turns pinch and double-tap zoom off, but iPhone Safari starts its own pinch gestures, so cancel those too, and cancel any two-finger touch move.
+document.addEventListener('gesturestart', e => e.preventDefault());
+document.addEventListener('gesturechange', e => e.preventDefault());
+document.addEventListener('touchmove', e => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, {passive:false});
+// If the page still ends up zoomed in (a zoom Safari remembered, a double tap that slipped through), set it back to normal by itself.
+// iPhone Safari resets its zoom when the viewport tag briefly says maximum-scale=1. A zoom caused by an open text box is left alone.
+function zoomReset(){ const m = document.querySelector('meta[name=viewport]'); if (!m) return; const c = m.content; m.content = c.replace(/,?\s*maximum-scale=[^,]*/, '') + ', maximum-scale=1'; setTimeout(() => { m.content = c; }, 400); }
+let zoomT = null;
+function zoomWatch(){ const v = window.visualViewport; if (!v || v.scale <= 1.02) return; const a = document.activeElement; if (a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return; clearTimeout(zoomT); zoomT = setTimeout(zoomReset, 250); }
+if (window.visualViewport){ window.visualViewport.addEventListener('resize', zoomWatch); window.addEventListener('pageshow', zoomWatch); document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(zoomWatch, 100); }); setTimeout(zoomWatch, 600); }
 /* ---------- full screen ---------- */
 const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
 const fsOk = () => !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
@@ -4476,7 +4481,7 @@ function lxCards(p){
     b.querySelector('b').textContent = m.name;
     b.querySelector('small').textContent = s.ready.length ? s.ready.length+' items · about '+Math.round(s.mins / 5) * 5+' min' : m.blurb;
     b.querySelector('.lx-bar i').style.width = (s.ready.length ? s.d/s.ready.length*100 : (h ? 100 : 0))+'%';
-    b.querySelector('.tst').textContent = t0 ? 'Final test: '+(h ? 'best '+h.best+'%' : 'not taken yet') : 'No final test';
+    const ex = m.exam && p.exam && p.exam[m.exam.id]; b.querySelector('.tst').textContent = m.exam ? 'Final test: '+(ex && ex.runs ? 'best '+ex.best+'%' : 'not taken yet') : t0 ? 'Final test: '+(h ? 'best '+h.best+'%' : 'not taken yet') : 'No final test';
     b.addEventListener('click', () => { sfx.ok(); lxModule(m.id); });
     box.appendChild(b);
   });

@@ -214,6 +214,14 @@ for (let i = 0; i < 300 && !(await js('!!(window.__sim && window.__sim.lxState)'
 await sim(`lesson('t-where')`); await sleep(200);
 ok(await js(`!document.getElementById('lx-priya').hidden`), 'after a reload the key is still there and the tutor button shows');
 await js(`localStorage.removeItem('hsim-ai'); sessionStorage.removeItem('hsim-ai')`);
+// (4d) the course map says which levels have a final test (it used to say "No final test" for every level from 4 to 12)
+await js(`localStorage.removeItem('hsim-learn')`); await js(`location.hash = '#course'`); await cdp('Page.reload'); await sleep(1500);
+for (let i = 0; i < 300 && !(await js('!!(window.__sim && window.__sim.lxState)')); i++) await sleep(100);
+{
+  const cards = await js(`[...document.querySelectorAll('#lx-cards .mcard')].map(c => c.innerText)`);
+  const lvl = cards.filter(t => /Level (4|5|6|7|8|9|10|11|12):/.test(t));
+  ok(lvl.length === 9 && lvl.every(t => /Final test: not taken yet/.test(t)), 'each of Levels 4 to 12 shows "Final test: not taken yet" on the course map (' + lvl.filter(t => !/Final test: not taken yet/.test(t)).length + ' do not)');
+}
 // (5) XP: a lesson is worth 100, a project 150 and a final test 150 (no study days, no hands-on ticks)
 await js(`localStorage.setItem('hsim-learn', JSON.stringify({done: {'d-speed': 1, 'd-project': 1, 'd-exam': 1}, days: [], real: {}, quests: [], pos: {}, exam: {}}))`);
 await js(`location.hash = '#course'`); await cdp('Page.reload'); await sleep(1500);
