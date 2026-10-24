@@ -1,0 +1,33 @@
+# Opens one GitHub issue on the 1st of each month (GitHub emails the repo owner, and the phone app notifies) with the update checklist.
+# Model names, prices, free tiers, docs pages and job-market numbers change fast; this is the nudge to re-check them.
+name: monthly-reminder
+on:
+  schedule: [{ cron: '0 15 1 * *' }]
+  workflow_dispatch:
+permissions:
+  issues: write
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: open the monthly update issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          month=$(date -u +"%B %Y")
+          title="Monthly course update check: $month"
+          if gh issue list --state open --search "in:title \"$title\"" --json number -q '.[0].number' | grep -q .; then echo "already open"; exit 0; fi
+          gh issue create --title "$title" --body "$(cat <<'BODY'
+          Time for the monthly update of the course. Tick each box when done, then close this issue.
+
+          - [ ] Look at the **monthly-facts** run in the Actions tab (it re-runs every lesson example and every outside link). If it failed, fix what it names.
+          - [ ] Model names, prices, limits and API shapes in Levels 8 and 9 still match platform.claude.com/docs (check the models overview, pricing and the SDK changelog).
+          - [ ] Claude Code install, sign-in and plan wording (Level 2) still matches code.claude.com/docs.
+          - [ ] Free-tier and hosting claims (Render, Railway, Fly.io, Docker Desktop terms) still match their pricing pages.
+          - [ ] Level 11 hiring text: check one fresh source (Indeed Hiring Lab, Job Bank Alberta) and update the dated sentences.
+          - [ ] Security facts: OWASP Top 10, OWASP LLM Top 10, Security+ exam version, and the free-offer terms of any linked certificate.
+          - [ ] Look through the open issues on this repo and fix what real learners reported.
+          - [ ] Update the "last checked" date in the How this course is checked panel, then publish.
+          BODY
+          )"
