@@ -10,6 +10,7 @@ ok(!/fonts\.googleapis\.com|fonts\.gstatic\.com/.test(play), 'no font request go
 ok(!/^\s*<script[^>]+src=/im.test(play) && !/<script[^>]+src="https?:/i.test(play), 'no external script tag (lesson text may mention one)');
 ok(!/<link[^>]+href="https?:/i.test(play), 'no external stylesheet or preconnect link');
 ok(!/user-scalable\s*=\s*no|maximum-scale/.test(play), 'the viewport tag allows zoom');
+ok(/\*\{touch-action:manipulation!important\}/.test(play), 'double-tap zoom is off on every element, including the all:unset buttons (touch-action manipulation with !important)');
 ok(!/gesturestart/.test(play), 'no code cancels pinch gestures');
 const PRIVATE = ['SHADHUN' + 'TER', 'gold-swing' + '-bot', 'C:' + String.fromCharCode(92) + 'Users', 'C:/Users'];   // spelled in pieces so this file does not repeat them
 ok(!PRIVATE.some(x => play.includes(x)), 'no private path or private project name in the page');
