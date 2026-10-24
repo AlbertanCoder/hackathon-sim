@@ -46,6 +46,15 @@ for (const [name, id, i] of [['command box', 't-where', 1], ['fill boxes', 't-fi
 await js(`document.getElementById('menu-btn').click()`); await sleep(300);
 ok(await js(`parseFloat(getComputedStyle(document.getElementById('set-key')).fontSize) >= 16`), 'the AI key box is at least 16 px on a phone');
 ok(!/user-scalable|maximum-scale/.test(await js(`document.querySelector('meta[name=viewport]').content`)), 'the viewport tag does not lock zoom (browser page zoom still works)');
+// a page that ends up zoomed in shows a fix button (and resets itself on iPhone), and the button goes away at normal size
+await js(`document.getElementById('menu-done') && document.getElementById('menu-done').click()`); await sleep(200);
+await cdp('Emulation.setPageScaleFactor', { pageScaleFactor: 2.2 }); await sleep(900);
+{
+  const z = await js(`(() => { const b = document.getElementById('zoom-fix'); const v = window.visualViewport; if (!b) return {err: 'no button'}; const r = b.getBoundingClientRect(); return {hidden: b.hidden, scale: v.scale, insideScreen: r.width > 0 && r.left >= -2 && r.right <= v.width + 2 && r.top >= -2 && r.bottom <= v.height + 2, text: b.textContent}; })()`);
+  ok(z && !z.err && z.scale > 2 && z.hidden === false && z.insideScreen, 'zoomed in to 2.2 times: the fix button shows and sits on the visible part of the screen: ' + JSON.stringify(z));
+}
+await cdp('Emulation.setPageScaleFactor', { pageScaleFactor: 1 }); await sleep(900);
+ok(await js(`document.getElementById('zoom-fix').hidden === true`), 'at normal size the fix button is hidden');
 ok(errors.length === 0, 'no script errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
 console.log(`${n} checks, failed: ${bad}`);
 edge.kill();

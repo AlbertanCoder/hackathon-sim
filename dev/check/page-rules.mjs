@@ -11,7 +11,7 @@ ok(!/^\s*<script[^>]+src=/im.test(play) && !/<script[^>]+src="https?:/i.test(pla
 ok(!/<link[^>]+href="https?:/i.test(play), 'no external stylesheet or preconnect link');
 ok(!/user-scalable|maximum-scale/.test((play.match(/<meta name="viewport" content="([^"]*)"/) || [, ''])[1]), 'the viewport tag does not lock zoom (the browser page zoom and text size still work)');
 ok(/\*\{touch-action:pan-x pan-y!important\}/.test(play), 'no pinch or double-tap zoom on a phone (touch-action pan-x pan-y with !important, so the all:unset buttons keep it)');
-ok(/gesturestart', e => e.preventDefault/.test(play) && /function zoomReset/.test(play), 'every pinch gesture is cancelled, and a page that ends up zoomed in resets itself');
+ok(/gesturestart', e => e.preventDefault/.test(play) && /function zoomReset/.test(play) && /id = 'zoom-fix'/.test(play) && /touchstart', e => \{ if \(e.touches/.test(play), 'every pinch gesture and two-finger touch is cancelled, and a page that ends up zoomed in resets itself and shows a fix button');
 const PRIVATE = ['SHADHUN' + 'TER', 'gold-swing' + '-bot', 'C:' + String.fromCharCode(92) + 'Users', 'C:/Users'];   // spelled in pieces so this file does not repeat them
 ok(!PRIVATE.some(x => play.includes(x)), 'no private path or private project name in the page');
 ok(!/EDMONTON 14|14&ndash;15 NOV|14\u201315 NOV/.test(play), 'no stale hackathon date in the header or Home');

@@ -3504,16 +3504,22 @@ document.querySelectorAll('.dpad button').forEach(b=>{
 $('abtn').addEventListener('pointerdown', e=>{ e.preventDefault(); if (D) advance(); else interact(); });
 function renderMute(){ $('mute').textContent = muted ? 'Sound off' : 'Sound on'; }
 /* ---------- no zoom ---------- */
-// touch-action turns pinch and double-tap zoom off, but iPhone Safari starts its own pinch gestures, so cancel those too, and cancel any two-finger touch move.
+// touch-action turns pinch and double-tap zoom off, but iPhone Safari starts its own gestures, so cancel those too:
+// every pinch gesture, any touch with two fingers (at the start and while moving), and a quick second tap on plain text.
 document.addEventListener('gesturestart', e => e.preventDefault());
 document.addEventListener('gesturechange', e => e.preventDefault());
+document.addEventListener('touchstart', e => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, {passive:false});
 document.addEventListener('touchmove', e => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, {passive:false});
-// If the page still ends up zoomed in (a zoom Safari remembered, a double tap that slipped through), set it back to normal by itself.
-// iPhone Safari resets its zoom when the viewport tag briefly says maximum-scale=1. A zoom caused by an open text box is left alone.
-function zoomReset(){ const m = document.querySelector('meta[name=viewport]'); if (!m) return; const c = m.content; m.content = c.replace(/,?\s*maximum-scale=[^,]*/, '') + ', maximum-scale=1'; setTimeout(() => { m.content = c; }, 400); }
-let zoomT = null;
-function zoomWatch(){ const v = window.visualViewport; if (!v || v.scale <= 1.02) return; const a = document.activeElement; if (a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return; clearTimeout(zoomT); zoomT = setTimeout(zoomReset, 250); }
-if (window.visualViewport){ window.visualViewport.addEventListener('resize', zoomWatch); window.addEventListener('pageshow', zoomWatch); document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(zoomWatch, 100); }); setTimeout(zoomWatch, 600); }
+let lastTap = 0;
+document.addEventListener('touchend', e => { const now = Date.now(); const t = e.target; const live = t && t.closest && t.closest('button, a, input, textarea, select, label, summary, [role=button]'); if (!live && now - lastTap < 350) e.preventDefault(); lastTap = now; }, {passive:false});
+// If the page still ends up zoomed in, set it back to normal by itself, and show a button that does the same by hand.
+// iPhone Safari resets its zoom when the viewport tag briefly says scale 1 only. A zoom caused by an open text box is left alone.
+function zoomReset(){ const m = document.querySelector('meta[name=viewport]'); if (!m) return; const c = m.content; m.content = 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover'; setTimeout(() => { m.content = c; }, 500); }
+let zoomT = null, zoomBtn = null;
+function zoomPlace(){ const v = window.visualViewport; if (!zoomBtn || !v) return; zoomBtn.hidden = v.scale <= 1.05; if (zoomBtn.hidden) return; zoomBtn.style.transformOrigin = '0 0'; zoomBtn.style.transform = 'scale(' + (1 / v.scale) + ')'; zoomBtn.style.left = (v.pageLeft + 12 / v.scale) + 'px'; zoomBtn.style.top = (v.pageTop + v.height - 70 / v.scale) + 'px'; }
+function zoomWatch(){ const v = window.visualViewport; zoomPlace(); if (!v || v.scale <= 1.02) return; const a = document.activeElement; if (a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return; clearTimeout(zoomT); zoomT = setTimeout(zoomReset, 250); }
+function zoomInit(){ const v = window.visualViewport; if (!v) return; zoomBtn = document.createElement('button'); zoomBtn.type = 'button'; zoomBtn.id = 'zoom-fix'; zoomBtn.hidden = true; zoomBtn.textContent = 'Zoomed in: tap to fix'; zoomBtn.setAttribute('style', 'position:absolute;z-index:99999;padding:14px 18px;font:700 18px system-ui,sans-serif;background:#f6b73c;color:#161a28;border:3px solid #161a28;border-radius:8px;min-height:44px;touch-action:manipulation'); zoomBtn.addEventListener('click', () => { zoomReset(); setTimeout(zoomPlace, 700); }); document.body.appendChild(zoomBtn); v.addEventListener('resize', zoomWatch); v.addEventListener('scroll', zoomPlace); window.addEventListener('pageshow', zoomWatch); document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(zoomWatch, 100); }); setTimeout(zoomWatch, 600); }
+zoomInit();
 /* ---------- full screen ---------- */
 const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
 const fsOk = () => !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
