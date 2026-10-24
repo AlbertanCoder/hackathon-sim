@@ -3533,7 +3533,7 @@ function openMenu(){
   if (menuOpen) return; menuOpen = true; held.length = 0;
   $('set-sound').checked = !muted; $('set-music').checked = musicOn;
   $('set-speed').value = String(textSpeed); if (!$('set-speed').value) $('set-speed').value = '0.055';
-  $('set-key').value = AI.key; $('set-model').value = AI.model; $('set-remember').checked = !!AI.remember;
+  $('set-key').value = AI.key; $('set-model').value = AI.model; $('set-remember').checked = AI.key ? !!AI.remember : true;   // a new key is remembered by default, or it vanishes when the tab closes
   const inRun = !!(S && S.screen==='play');
   $('menu-title').textContent = inRun ? 'Paused' : 'Settings'; $('menu-eyebrow').textContent = inRun ? 'PAUSE MENU' : 'SETTINGS';
   $('menu-new').hidden = !(S && S.screen!=='title' && S.screen!=='drills' && S.screen!=='learn' && S.screen!=='home');   // in a drill it would wipe the saved run
@@ -3543,7 +3543,7 @@ function openMenu(){
   resetNewBtn(); renderSpend(); $('set-status').textContent = ''; $('set-status').className = 'status';
   $('menu').hidden = false; $('menu-close').focus();
 }
-function closeMenu(){ if (!menuOpen) return; menuOpen = false; $('menu').hidden = true; if (keyEditing && !$('set-key').value.trim()) $('set-key').value = AI.key; keyEditing = false; saveAiFields(); }
+function closeMenu(){ if (!menuOpen) return; menuOpen = false; $('menu').hidden = true; if (keyEditing && !$('set-key').value.trim()) $('set-key').value = AI.key; keyEditing = false; saveAiFields(); if (typeof LX !== 'undefined' && LX && $('lx-priya')){ $('lx-priya').hidden = !liveOn() || !!LX.exam; $('lx-aihint').hidden = liveOn() || !!LX.exam; } }
 function saveAiFields(){
   AI.key = $('set-key').value.trim(); AI.model = $('set-model').value.trim() || 'deepseek-flash'; AI.remember = $('set-remember').checked;
   try {
@@ -3577,7 +3577,7 @@ function renderKey(){
   const has = !!AI.key, edit = !has || keyEditing;
   $('key-saved').hidden = edit; $('key-form').hidden = !edit; $('key-cancel').hidden = !(has && keyEditing);
   $('key-fold').hidden = !has;
-  if (has) $('key-line').textContent = '\u2713 Key saved (ends in \u2026'+AI.key.slice(-4)+') \u00b7 '+provName()+(AI.remember ? ' \u00b7 remembered on this computer' : ' \u00b7 for this visit only');
+  if (has) $('key-line').textContent = '\u2713 Key saved (ends in \u2026'+AI.key.slice(-4)+') \u00b7 '+provName()+(AI.remember ? ' \u00b7 remembered on this computer' : ' \u00b7 for this visit only: it is lost when you close the tab. Tick "Remember" and save again to keep it');
   if (!edit) $('set-key').value = AI.key;
 }
 function keyConfirm(on){ $('key-confirm').hidden = !on; $('set-clear').hidden = on; if (on) $('key-no').focus(); }

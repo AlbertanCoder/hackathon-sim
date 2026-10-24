@@ -198,6 +198,22 @@ ok(/NOT PASSED|PASSED/.test((await ls()).step) && await js(`JSON.parse(localStor
     ok((await ls()).passed === true, 'the right command still passes after a wrong one');
   }
 }
+// (4c) the AI key: a new key is remembered by default, survives a reload, and the tutor button appears as soon as Settings closes
+await js(`localStorage.removeItem('hsim-ai'); sessionStorage.removeItem('hsim-ai')`);
+await js(`localStorage.removeItem('hsim-learn')`); await cdp('Page.reload'); await sleep(1500);
+for (let i = 0; i < 300 && !(await js('!!(window.__sim && window.__sim.lxState)')); i++) await sleep(100);
+await sim(`lesson('t-where')`); await sleep(200);
+ok(await js(`document.getElementById('lx-priya').hidden && !document.getElementById('lx-aihint').hidden`), 'with no key the tutor button is off and the "add your key" button shows');
+await js(`document.getElementById('lx-aihint').click()`); await sleep(300);
+ok(await js(`document.getElementById('set-remember').checked`), 'the Remember box starts ticked for a new key');
+await js(`(() => { const k = document.getElementById('set-key'); k.value = 'sk-or-v1-test-key-1234'; document.getElementById('menu-done').click(); })()`); await sleep(300);
+ok(await js(`!!localStorage.getItem('hsim-ai') && JSON.parse(localStorage.getItem('hsim-ai')).key === 'sk-or-v1-test-key-1234'`), 'the key is saved on this computer when Settings closes');
+ok(await js(`!document.getElementById('lx-priya').hidden && document.getElementById('lx-aihint').hidden`), 'the tutor button appears as soon as Settings closes');
+await cdp('Page.reload'); await sleep(1500);
+for (let i = 0; i < 300 && !(await js('!!(window.__sim && window.__sim.lxState)')); i++) await sleep(100);
+await sim(`lesson('t-where')`); await sleep(200);
+ok(await js(`!document.getElementById('lx-priya').hidden`), 'after a reload the key is still there and the tutor button shows');
+await js(`localStorage.removeItem('hsim-ai'); sessionStorage.removeItem('hsim-ai')`);
 // (5) XP: a lesson is worth 100, a project 150 and a final test 150 (no study days, no hands-on ticks)
 await js(`localStorage.setItem('hsim-learn', JSON.stringify({done: {'d-speed': 1, 'd-project': 1, 'd-exam': 1}, days: [], real: {}, quests: [], pos: {}, exam: {}}))`);
 await js(`location.hash = '#course'`); await cdp('Page.reload'); await sleep(1500);
