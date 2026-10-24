@@ -29,6 +29,8 @@ jobs:
           node check/learn.mjs
       - name: the Python runner on the Python steps (Pyodide, from the pyodide/ folder)
         run: node check/pyrun.mjs
+      - name: phone rules (16 px text boxes, no sideways scroll, zoom allowed)
+        run: node check/phone.mjs
   screens:
     runs-on: windows-latest
     defaults: { run: { shell: bash, working-directory: dev } }

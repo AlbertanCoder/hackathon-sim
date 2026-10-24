@@ -434,6 +434,8 @@ code.nb{white-space:nowrap}   /* a short command like ls --help stays on one lin
 
 /* touch targets (audit Z-06): 44 px high on phones and touch screens; the command and fill boxes are never shorter than 28 px */
 .lx-in input,.lx-fill{min-height:28px}
+/* iPhone Safari zooms the whole page in when you tap a text box whose text is smaller than 16 px (and then stays zoomed). Pinch zoom stays allowed; this stops the automatic zoom. (audit follow-up from a phone test) */
+@media (pointer:coarse){input,textarea,select{font-size:16px!important}.lx-write{font-size:16px!important}}
 @media (max-width:700px),(pointer:coarse){#lx-crumbs button,#lx-menu,#lx-prev,#lx-reset,#lx-check,#lx-hint,#lx-show,#lx-ai,#lx-priya,#lx-aihint,.lx-body .btn,.lx-run .btn,.opt,.lx-in input,.lx-fill{min-height:44px}.lx-in input,.lx-fill{padding-top:6px;padding-bottom:6px}}
 </style>
 
