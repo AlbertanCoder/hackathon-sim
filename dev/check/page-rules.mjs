@@ -9,9 +9,9 @@ ok((play.match(/<\/script>/g) || []).length === 1, 'a lesson text does not conta
 ok(!/fonts\.googleapis\.com|fonts\.gstatic\.com/.test(play), 'no font request goes to Google (fonts are embedded)');
 ok(!/^\s*<script[^>]+src=/im.test(play) && !/<script[^>]+src="https?:/i.test(play), 'no external script tag (lesson text may mention one)');
 ok(!/<link[^>]+href="https?:/i.test(play), 'no external stylesheet or preconnect link');
-ok(!/user-scalable\s*=\s*no|maximum-scale/.test(play), 'the viewport tag allows zoom');
-ok(/\*\{touch-action:manipulation!important\}/.test(play), 'double-tap zoom is off on every element, including the all:unset buttons (touch-action manipulation with !important)');
-ok(!/gesturestart/.test(play), 'no code cancels pinch gestures');
+ok(!/user-scalable\s*=\s*no|maximum-scale/.test(play), 'the viewport tag does not lock zoom (the browser page zoom and text size still work)');
+ok(/\*\{touch-action:pan-x pan-y!important\}/.test(play), 'no pinch or double-tap zoom on a phone (touch-action pan-x pan-y with !important, so the all:unset buttons keep it)');
+ok(/gesturestart/.test(play), 'iPhone Safari pinch gestures are cancelled (unless the page is already zoomed in)');
 const PRIVATE = ['SHADHUN' + 'TER', 'gold-swing' + '-bot', 'C:' + String.fromCharCode(92) + 'Users', 'C:/Users'];   // spelled in pieces so this file does not repeat them
 ok(!PRIVATE.some(x => play.includes(x)), 'no private path or private project name in the page');
 ok(!/EDMONTON 14|14&ndash;15 NOV|14\u201315 NOV/.test(play), 'no stale hackathon date in the header or Home');

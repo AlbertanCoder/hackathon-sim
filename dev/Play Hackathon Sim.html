@@ -23,7 +23,7 @@
   color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
-*{touch-action:manipulation!important}   /* scrolling and pinch zoom are allowed (people who need big text must be able to zoom); only double-tap zoom is off, so a quick second tap on a button is not a zoom. !important so the all:unset buttons and boxes keep it too */
+*{touch-action:pan-x pan-y!important}   /* scrolling only: no pinch or double-tap zoom, because an accidental zoom made the page unusable on a phone. On every element, not just html: Safari starts the touch-action check over inside each scrolling box (code blocks, the terminal). !important so the all:unset buttons and boxes keep it too. The browser's own page zoom and text size (Safari's aA menu) still work. */
 [hidden]{display:none!important}
 html{background:var(--ink);color:var(--text);-webkit-text-size-adjust:100%;text-size-adjust:100%;scrollbar-gutter:stable}   /* no width jump (and no game-frame resize loop) when a scrollbar comes and goes */
 body{margin:0;background:var(--ink);color:var(--text);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;   /* set here as well as on html: the claude.ai page skeleton puts body{background:#fff;color:#000} ahead of these styles */font-family:var(--f-body);font-size:18px;line-height:1.5;
@@ -3503,8 +3503,12 @@ document.querySelectorAll('.dpad button').forEach(b=>{
 });
 $('abtn').addEventListener('pointerdown', e=>{ e.preventDefault(); if (D) advance(); else interact(); });
 function renderMute(){ $('mute').textContent = muted ? 'Sound off' : 'Sound on'; }
-/* ---------- zoom ---------- */
-// Pinch zoom is allowed (audit Z-06). The viewport tag does not limit zoom.
+/* ---------- no zoom ---------- */
+// touch-action turns pinch and double-tap zoom off, but Safari on iPhone starts its own pinch gestures, so cancel those as well.
+// If the page is zoomed in already (Safari can bring an old zoom back on reload), let the pinch through so it can be zoomed back out.
+let pinchOk = false;
+document.addEventListener('gesturestart', e=>{ pinchOk = (window.visualViewport?.scale || 1) > 1.01; if (!pinchOk) e.preventDefault(); });
+document.addEventListener('gesturechange', e=>{ if (!pinchOk) e.preventDefault(); });
 /* ---------- full screen ---------- */
 const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
 const fsOk = () => !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);

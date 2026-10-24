@@ -45,7 +45,7 @@ for (const [name, id, i] of [['command box', 't-where', 1], ['fill boxes', 't-fi
 }
 await js(`document.getElementById('menu-btn').click()`); await sleep(300);
 ok(await js(`parseFloat(getComputedStyle(document.getElementById('set-key')).fontSize) >= 16`), 'the AI key box is at least 16 px on a phone');
-ok(!/user-scalable|maximum-scale/.test(await js(`document.querySelector('meta[name=viewport]').content`)), 'pinch zoom is still allowed');
+ok(!/user-scalable|maximum-scale/.test(await js(`document.querySelector('meta[name=viewport]').content`)), 'the viewport tag does not lock zoom (browser page zoom still works)');
 ok(errors.length === 0, 'no script errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
 console.log(`${n} checks, failed: ${bad}`);
 edge.kill();
