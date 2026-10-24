@@ -1,4 +1,4 @@
-<title>Hackathon Sim</title>
+<title>Edmonton Tech Academy</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAe0lEQVR42mOQktP9P5CYYcg5wLb2Nl48/BxAyEJKHTR4HUDI4HmH/6Ngch0y6oDB5wBKEx2pDhl1wOBxAK0txuWQweOA0faAq1cMXfHgdYCYsj0KLrk8C4zRxcnFQ88B1HbI0HUAtRwydB0wctMAIYth8uh46DpgxNUFACzLeBptgf/HAAAAAElFTkSuQmCC">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAACr0lEQVR42u3coQ2EQBBAUapAnMCgr4QLCkMNlIG9RhA0QwlIiuEqOEHCJLDzxPeT3Xlus9WreR9S1iqHIAAkACQAJAAkACQAJAAkACQAJAAkANL0+e6Pzh0CAIAAAEAAACAAABAAAAgAAAQAAAAIAAAEAAACAAABAIAFVQZgAAgAAAQAAAIAAAEAgAAAQAAAIAAAEAAACAAABAAAAsBC/2tZj9CAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAx1UqFQwAAgAAAQCAAABAAAAgAAAQAAAIAAAEAAACAAABAIAAAEAAACAAABAAAAgAAAQAAAIAAAEAgAAAQABIAEgASE8H4FJUEhgABAAAAgAAAQCAAABAAAAgAAAQAAAIAAAEAAACwCErMwCppAAQABIAEgASABIAEgASABIAEgASAFJmAP0wSrcNAAEAgAAAQAAAIAAAEAAACAAABAAAAgAAAQCAAABAAMQBqNsutGmbTxU9j64NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA8AIABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAnACAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI/hBAAAAgAAAQCAAABAAAAgAAAQAAAIAAAEAAACAAABAIAAsNBXzR8dAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASHcIAAEAgAAAQAAAIAAAEAAACAAABAAAAgAAAQCAAABAiQH8APao5HUrFfKPAAAAAElFTkSuQmCC">
 <style>/* Fonts embedded so no request goes to Google: Atkinson Hyperlegible (Braille Institute) and Pixelify Sans, both SIL Open Font License 1.1 (latin subset) */
@@ -47,7 +47,7 @@ body[data-screen="play"] .nav{display:none}   /* in the game, the pause menu tak
   .nv{flex-direction:column;gap:0;font-size:.7rem;padding:4px 6px;min-width:56px;justify-content:center}
   .nv i{font-size:1.2rem}
   body:not([data-screen="play"]) .cab{padding-bottom:74px}
-  body.viewer .brand{display:none}   /* inside the claude.ai page viewer: its floating bar already says Hackathon Sim and covers the top 80px or so */
+  body.viewer .brand{display:none}   /* inside the claude.ai page viewer: its floating bar already says Edmonton Tech Academy and covers the top 80px or so */
   body.viewer .cab{padding-top:84px}
 }
 /* ---- Home ---- */
@@ -440,7 +440,7 @@ code.nb{white-space:nowrap}   /* a short command like ls --help stays on one lin
 <div class="cab">
   <div class="top">
     <div class="brand">
-      <h1>Hackathon Sim</h1>
+      <h1>Edmonton Tech Academy</h1>
       <p>FREE COURSE &middot; PLUS A HACKATHON REHEARSAL GAME</p>
     </div>
     <nav class="nav" id="nav" aria-label="Main">
@@ -460,7 +460,7 @@ code.nb{white-space:nowrap}   /* a short command like ls --help stays on one lin
   </div>
 
   <section class="panel" id="scr-home">
-    <h3 id="home-eyebrow">FREE COURSE &middot; FROM ZERO TO EMPLOYABLE IN TECH, LEANING TO AI</h3>
+    <h3 id="home-eyebrow">EDMONTON TECH ACADEMY &middot; FREE COURSE &middot; FROM ZERO TO EMPLOYABLE IN TECH, LEANING TO AI</h3>
     <h2 id="home-welcome">Welcome.</h2>
     <p class="home-meta" id="home-meta"></p>
     <article class="hcard quest" id="home-quest">
@@ -1022,7 +1022,7 @@ async function aiCall(messages, maxTokens, timeoutMs, o){
   try {
     const r = await fetch(or ? 'https://openrouter.ai/api/v1/chat/completions' : 'https://api.deepseek.com/chat/completions', {
       method:'POST', signal:ctl.signal,
-      headers: or ? {'Content-Type':'application/json', 'Authorization':'Bearer '+AI.key, 'X-Title':'Hackathon Sim'} : {'Content-Type':'application/json', 'Authorization':'Bearer '+AI.key},
+      headers: or ? {'Content-Type':'application/json', 'Authorization':'Bearer '+AI.key, 'X-Title':'Edmonton Tech Academy'} : {'Content-Type':'application/json', 'Authorization':'Bearer '+AI.key},
       body:JSON.stringify(body)
     });
     if (!r.ok){ const e = new Error('http '+r.status); e.status = r.status; throw e; }
@@ -4741,7 +4741,7 @@ function lxCert(m, p){   // certificate card: shown only when every ready item i
   const ready = lxItems(m).filter(l => lxReady(l) && !l.optional);
   if (!ready.length || !ready.every(l => p.done[l.id])) return null;
   const when = new Date(Math.max.apply(null, ready.map(l => p.done[l.id]))).toLocaleDateString();
-  const c = lxEl('div', 'lx-cert', '<small>CERTIFICATE OF COMPLETION</small><b></b><span></span>');
+  const c = lxEl('div', 'lx-cert', '<small>EDMONTON TECH ACADEMY &middot; CERTIFICATE OF COMPLETION</small><b></b><span></span>');
   c.setAttribute('role', 'note'); c.querySelector('b').textContent = m.name;
   c.querySelector('span').textContent = 'You finished all '+ready.length+' items on '+when+'.';
   return c;

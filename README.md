@@ -1,4 +1,6 @@
-# Hackathon Sim: a free course from zero to employable in tech
+# Edmonton Tech Academy: a free course from zero to employable in tech
+
+The course was earlier called Hackathon Sim; the web address still uses the old name.
 
 **Open it:** https://albertancoder.github.io/hackathon-sim/
 
@@ -13,7 +15,7 @@ It does **not** promise a job, an income or any outcome. It teaches skills and e
 
 ## Honest status
 - Levels 4-12 have **not** been tried by real beginners yet. The code, outputs and numbers in the lessons were re-run by machine; the explanations were read by one reviewer.
-- Code you write in a lesson: JavaScript steps and most Python steps (59 of them) are run in your browser against the lesson's own examples, like freeCodeCamp (Python runs on Pyodide, served from this site, about 12 MB downloaded the first time a Python step is reached). SQL, TypeScript and the few Python steps that need extra libraries cannot run in the page: for those you compare your code with the model answer and tick what you covered. The final tests use only auto-marked questions.
+- Code you write in a lesson: JavaScript steps and most Python steps (65 of them) are run in your browser against the lesson's own examples, like freeCodeCamp (Python runs on Pyodide, served from this site, about 12 MB downloaded the first time a Python step is reached). SQL, TypeScript and the few Python steps that need extra libraries cannot run in the page: for those you compare your code with the model answer and tick what you covered. The final tests use only auto-marked questions.
 - Facts about fast-moving things (model names, prices, docs pages) were checked on 23 October 2026 and will age.
 - A quality audit on 23 October 2026 found problems; fixes are being applied in the open in this repo's history.
 
