@@ -85,6 +85,7 @@
   "w-html",
   "w-js",
   "w-dom",
+  "w-xss",
   "w-node",
   "w-fetch",
   "w-react",
@@ -98,6 +99,8 @@
   "q-env",
   "q-deploy",
   "q-security",
+  "q-auth",
+  "q-access",
   "q-project",
   "q-exam"
  ],
@@ -108,6 +111,8 @@
   "a-context",
   "a-rag",
   "a-agents",
+  "a-aisec",
+  "a-jailbreak",
   "a-project",
   "a-exam"
  ],
@@ -127,6 +132,8 @@
   "e-design",
   "e-tests",
   "e-review",
+  "e-supply",
+  "e-zeroday",
   "e-system",
   "e-project",
   "e-exam"
@@ -135,6 +142,7 @@
   "h-github",
   "h-resume",
   "h-roles",
+  "h-vuln",
   "h-interview",
   "h-ai",
   "h-project",
@@ -146,6 +154,7 @@
   "x-pipeline",
   "x-docker",
   "x-cloud",
+  "x-secure",
   "x-project",
   "x-exam",
   "x-ts"
