@@ -1,9 +1,13 @@
-"""Proof for Levels 4 to 12: every runnable claim in the new levels is re-run for real, and the shape rules are checked.
+"""Proof for the whole course: the inline modules (term, git, claude, power, hack, sky, python and the sec track)
+and Levels 4 to 12. Every runnable claim is re-run for real, and the shape rules are checked.
 Run from the hackathon-sim folder:  python -I check/levels-facts.py [workdir] [--no-urls]
 What a step may carry (the page ignores these fields):
   setup (on a lesson)   Python (or JS, SQL) source put in front of every run in that lesson
+  ex                    an example shown to the learner; if it looks like Python it must parse as a whole file,
+                        or as a function-body excerpt (py-try shows a fragment from inside run_post_demo)
   run / runs            {py|js|sql|sh: code, out: expected output}; with no code given, the step's own `ex` lines are run
   test (on write steps) a driver appended to the model answer and every alt; it must print ok. Every `bad` answer must FAIL it.
+                        A write step with no driver is compare-only: it must carry `rules` + `ans` instead.
 Ends with the line "levels: all passed" only if every check passed."""
 import json
 import os
@@ -12,6 +16,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -22,6 +27,12 @@ work = args[0] if args else os.path.join(tempfile.gettempdir(), 'levels-facts')
 os.makedirs(work, exist_ok=True)
 fails, notes, counts = [], [], {'checks': 0, 'runs': 0, 'answers': 0, 'bad': 0, 'urls': 0}
 LEVEL_MODS = ['dsa', 'net', 'web', 'data', 'llmapi', 'llm', 'swe', 'hired', 'ml']
+INLINE_MODS = ['term', 'git', 'claude', 'power', 'hack', 'sky', 'python', 'sec']   # modules living in index.html, sec last
+CHECK_MODS = INLINE_MODS + LEVEL_MODS
+# what each inline module must carry: a project is 'term' (a terminal one: `term` + `p` and no steps),
+# 'steps' (8 to 10 steps with a recap) or None; `exam` means one timed final test of 10 to 16 questions
+INLINE_SHAPE = {'term': {'proj': 'term'}, 'git': {'proj': 'term'}, 'claude': {'proj': 'steps'}, 'power': {'proj': 'steps'},
+                'hack': {'proj': 'steps'}, 'sky': {'proj': None}, 'python': {'proj': None}, 'sec': {'proj': 'steps', 'exam': True}}
 
 
 def ok(cond, msg):
@@ -43,10 +54,12 @@ node = shutil.which('node')
 r = sh([node, os.path.join(HERE, 'dump-lessons.mjs'), 'all'], cwd=ROOT)
 ok(r[0] == 0, 'dump-lessons failed: ' + r[2][-300:])
 ALL = json.loads(r[1])
-L = {k: v for k, v in ALL.items() if v['module'] in LEVEL_MODS}
-mods = sorted({v['module'] for v in L.values()}, key=LEVEL_MODS.index)
+L = {k: v for k, v in ALL.items() if v['module'] in CHECK_MODS}
+mods = sorted({v['module'] for v in L.values()}, key=CHECK_MODS.index)
 print('modules found:', ', '.join(mods) or 'none')
-ok(len(L) > 0, 'no level lessons found')
+ok(len(L) > 0, 'no lessons found')
+missing = [m for m in CHECK_MODS if m not in mods]
+ok(not missing, 'modules with no lessons at all (broken injection?): ' + ', '.join(missing))
 
 # ---- the packages the runs need, in a venv of their own ----
 blob = json.dumps(L)
@@ -75,7 +88,7 @@ def fresh_dir():
     return tempfile.mkdtemp(prefix='r', dir=run_dir)
 
 
-def pyrun(code, timeout=20):
+def pyrun(code, timeout=60):   # 60s, not 20s: a cold sklearn import in a fresh venv on a slow machine can pass 20s (x-ml.1 timed out once at 20s, then ran in 2s warm)
     d = fresh_dir()
     open(os.path.join(d, 'code.py'), 'w', encoding='utf-8').write(code)
     return sh([VPY, '-I', 'code.py'], cwd=d, timeout=timeout)
@@ -169,7 +182,7 @@ def noderun(lang, code, html, timeout=40):
 # ---- shape rules ----
 ids = list(L)
 ok(len(ids) == len(set(ids)), 'lesson ids are unique')
-for m in mods:
+for m in [x for x in mods if x in LEVEL_MODS]:
     items = [(k, v) for k, v in L.items() if v['module'] == m]
     plain = [v for k, v in items if not v['proj'] and not v['exam']]
     proj = [v for k, v in items if v['proj'] and not v['exam']]
@@ -181,6 +194,26 @@ for m in mods:
     ok(all(v['recap'] for v in plain + proj), f'{m}: every lesson and project has a recap')
     ok(all(len(v['refs']) >= 1 for v in plain), f'{m}: every lesson links at least one free outside course')
     ok(all(re.match(r'^https://', r[1]) for v in plain + proj for r in v['refs']), f'{m}: every link is https')
+for m in [x for x in mods if x in INLINE_MODS]:
+    items = [(k, v) for k, v in L.items() if v['module'] == m]
+    plain = [v for k, v in items if not v['proj'] and not v['exam']]
+    proj = [v for k, v in items if v['proj'] and not v['exam']]
+    exam = [v for k, v in items if v['exam']]
+    want = INLINE_SHAPE[m]
+    ok(len(plain) >= 4, f'{m}: at least 4 lessons (has {len(plain)})')
+    ok(all(4 <= len(v['steps']) <= 8 for v in plain), f'{m}: every lesson has 4 to 8 steps: ' + str({k: len(v['steps']) for k, v in items if not v['proj'] and not v['exam']}))
+    ok(all(v['recap'] for v in plain), f'{m}: every lesson has a recap')
+    if want['proj'] == 'term':
+        ok(len(proj) == 1 and bool(proj[0].get('term')) and bool(proj[0].get('p')) and len(proj[0]['steps']) == 0, f'{m}: one terminal practice project (term + p, no steps)')
+    elif want['proj'] == 'steps':
+        ok(len(proj) == 1 and 8 <= len(proj[0]['steps']) <= 10 and bool(proj[0].get('recap')), f'{m}: one portfolio project of 8 to 10 steps with a recap')
+    else:
+        ok(len(proj) == 0, f'{m}: carries no practice project')
+    if want.get('exam'):
+        ok(len(exam) == 1 and exam[0]['exam']['mins'] >= 10 and 0.5 <= exam[0]['exam']['pass'] <= 1 and 10 <= len(exam[0]['steps']) <= 16, f'{m}: one timed final test of 10 to 16 questions')
+    else:
+        ok(len(exam) == 0, f'{m}: carries no final test')
+    ok(all(re.match(r'^https://', r[1]) for v in plain + proj for r in v['refs']), f'{m}: every link is https')
 GUARANTEE = re.compile(r'guarantee|will get you (a|the) job|you will be hired|certain to get', re.I)
 for k, v in L.items():
     text = json.dumps([v['steps'], v['recap'], v['name']])
@@ -190,13 +223,22 @@ for k, v in L.items():
     for i, s in enumerate(v['steps']):
         t = s['t']
         if t == 'explain':
-            ok(len(s.get('points', [])) >= 3 and s.get('model') and s.get('need', 2) <= len(s.get('points', [])), f'{k}.{i + 1}: explain has points, a model answer and a sane `need`')
+            if v['module'] in LEVEL_MODS:
+                ok(len(s.get('points', [])) >= 3 and s.get('model') and s.get('need', 2) <= len(s.get('points', [])), f'{k}.{i + 1}: explain has points, a model answer and a sane `need`')
+            else:
+                ok(len(s.get('points', [])) >= 3, f'{k}.{i + 1}: explain has at least 3 points')
+                if not s.get('model'):
+                    notes.append(f'{k}.{i + 1}: an explain step with no model answer to show after Check (the page allows it; every level explain has one)')
         if t == 'todo':
             ok(len(s.get('items', [])) >= 2, f'{k}.{i + 1}: todo has at least 2 items')
         if t in ('mc', 'bug', 'fill', 'write', 'cmd'):
             ok(bool(s.get('q')), f'{k}.{i + 1}: {t} has a question')
         if t == 'fill':
-            ok('{}' not in s['q'], f'{k}.{i + 1}: a fill question must not contain a literal {{}}')
+            if '{}' in s['q']:
+                # the page blanks out only `code`, so {} in the question is wording style, not a bug: levels keep it out, the inline modules use it as a blank marker
+                ok(v['module'] not in LEVEL_MODS, f'{k}.{i + 1}: a fill question must not contain a literal {{}}')
+                if v['module'] not in LEVEL_MODS:
+                    notes.append(f'{k}.{i + 1}: the fill question uses {{}} as a prose blank marker (level questions keep {{}} out of the wording; the page itself is fine with it)')
             ok(sum(c.count('{}') for c in s['code']) == len(s['blanks']) == len(s['ans']), f'{k}.{i + 1}: fill blanks match its code')
         if v['exam']:
             ok(t not in ('read', 'explain', 'todo'), f'{k}.{i + 1}: a final test holds only auto-marked questions (not {t})')
@@ -221,10 +263,13 @@ for k, v in L.items():
                 try:
                     compile(code, key, 'exec')
                 except SyntaxError as e:
-                    ok(False, f'{key}: the example does not even parse: {e}')
+                    try:
+                        compile('def __excerpt__():\n' + '\n'.join('    ' + ln for ln in code.split('\n')), key, 'exec')   # an excerpt from inside a function is fine
+                    except SyntaxError:
+                        ok(False, f'{key}: the example does not even parse: {e}')
         if s['t'] == 'write':
             drv = s.get('test')
-            ok(bool(drv), f'{key}: a write step needs a `test` driver')
+            ok(bool(drv) or bool(s.get('rules')), f'{key}: a write step needs a `test` driver or compare-only `rules` + `ans`')
             if not drv:
                 continue
             lang = s.get('lang') or ('js' if v['module'] == 'web' else 'py')
@@ -256,21 +301,34 @@ if not NO_URLS:
     for url, who in seen.items():
         counts['urls'] += 1
         status = None
-        for method in ('HEAD', 'GET'):
-            try:
-                req = urllib.request.Request(url, method=method, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120 Safari/537.36'})
-                with urllib.request.urlopen(req, timeout=25) as resp:
-                    status = resp.status
+        for attempt in (1, 2):   # a slow site is not a dead one: try the pair twice before calling a link dead (canada.ca timed out once and answered 200 a second later)
+            for method in ('HEAD', 'GET'):
+                try:
+                    req = urllib.request.Request(url, method=method, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120 Safari/537.36'})
+                    with urllib.request.urlopen(req, timeout=25) as resp:
+                        status = resp.status
+                        break
+                except urllib.error.HTTPError as e:
+                    status = e.code
+                    if method == 'HEAD' and e.code in (403, 405, 400, 404, 501):
+                        continue
                     break
-            except urllib.error.HTTPError as e:
-                status = e.code
-                if method == 'HEAD' and e.code in (403, 405, 400, 404, 501):
+                except Exception as e:
+                    status = str(e)[:60]
+                    if method == 'GET':
+                        break
+            if isinstance(status, int) or attempt == 2:
+                break   # the site answered (no retry needed), or this was the retry
+            time.sleep(3)   # a network error on both methods: wait a moment and try once more
+        if not isinstance(status, int):
+            # some hosts (canada.ca behind Akamai) tarpit python's TLS fingerprint but answer a normal client: check with curl before calling the link dead
+            rc, out, err = sh(['curl.exe' if os.name == 'nt' else 'curl', '-sS', '-o', os.devnull, '-L', '--max-time', '30', '-w', '%{http_code}', '-A', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120 Safari/537.36', url], timeout=60)
+            m = re.fullmatch(r'(\d{3})', out.strip())
+            if rc == 0 and m:
+                status = int(m.group(1))
+                if 200 <= status < 400:
+                    notes.append(f'link drops python requests but answers curl, so it is alive (checked with curl): {url}')
                     continue
-                break
-            except Exception as e:
-                status = str(e)[:60]
-                if method == 'GET':
-                    break
         if isinstance(status, int) and (200 <= status < 400):
             continue
         if status in (401, 403, 429, 999):

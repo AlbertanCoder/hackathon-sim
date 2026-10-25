@@ -14,7 +14,7 @@ jobs:
         with: { node-version: 24 }
       - uses: actions/setup-python@v7
         with: { python-version: '3.12' }
-      - name: lessons of Levels 4 to 12 (runs, answers, links)
+      - name: every module's lessons (runs, answers, links)
         run: python -I check/levels-facts.py 'C:/w1'
       - name: Python lessons on the public practice repo
         run: python -I check/practice-facts.py 'C:/w2'
