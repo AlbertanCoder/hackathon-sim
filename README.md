@@ -29,5 +29,8 @@ Open the web address above. To run it locally, serve this folder (`python -m htt
 ## Checks
 `dev/check/` holds the checks (GitHub Actions runs them on every push, and re-runs every lesson example and link once a month): `node check/lessons-audit.mjs`, `levels.mjs`, `pyrun.mjs` and the rest, from inside `dev/`.
 
+## Support
+This course is free and stays free. If it helps you, you can [support it on Ko-fi](https://ko-fi.com/albertancoder): donations help pay for keeping it online and updated. Nothing is promised in return.
+
 ## Licence
 MIT, see `LICENSE`. Free to copy and adapt with the notice kept.

@@ -1,4 +1,6 @@
 <title>Edmonton Tech Academy</title>
+<meta name="apple-mobile-web-app-title" content="Edmonton Tech Academy">
+<meta name="application-name" content="Edmonton Tech Academy">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAe0lEQVR42mOQktP9P5CYYcg5wLb2Nl48/BxAyEJKHTR4HUDI4HmH/6Ngch0y6oDB5wBKEx2pDhl1wOBxAK0txuWQweOA0faAq1cMXfHgdYCYsj0KLrk8C4zRxcnFQ88B1HbI0HUAtRwydB0wctMAIYth8uh46DpgxNUFACzLeBptgf/HAAAAAElFTkSuQmCC">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAACr0lEQVR42u3coQ2EQBBAUapAnMCgr4QLCkMNlIG9RhA0QwlIiuEqOEHCJLDzxPeT3Xlus9WreR9S1iqHIAAkACQAJAAkACQAJAAkACQAJAAkANL0+e6Pzh0CAIAAAEAAACAAABAAAAgAAAQAAAAIAAAEAAACAAABAIAFVQZgAAgAAAQAAAIAAAEAgAAAQAAAIAAAEAAACAAABAAAAsBC/2tZj9CAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAx1UqFQwAAgAAAQCAAABAAAAgAAAQAAAIAAAEAAACAAABAIAAAEAAACAAABAAAAgAAAQAAAIAAAEAgAAAQABIAEgASE8H4FJUEhgABAAAAgAAAQCAAABAAAAgAAAQAAAIAAAEAAACwCErMwCppAAQABIAEgASABIAEgASABIAEgASAFJmAP0wSrcNAAEAgAAAQAAAIAAAEAAACAAABAAAAgAAAQCAAABAAMQBqNsutGmbTxU9j64NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA8AIABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAnACAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI/hBAAAAgAAAQCAAABAAAAgAAAQAAAIAAAEAAACAAABAIAAsNBXzR8dAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASHcIAAEAgAAAQAAAIAAAEAAACAAABAAAAgAAAQCAAABAiQH8APao5HUrFfKPAAAAAElFTkSuQmCC">
 <style>/* Fonts embedded so no request goes to Google: Atkinson Hyperlegible (Braille Institute) and Pixelify Sans, both SIL Open Font License 1.1 (latin subset) */
@@ -398,6 +400,23 @@ code.nb{white-space:nowrap}   /* a short command like ls --help stays on one lin
 .lx-wk summary{cursor:pointer;color:#aab3d0}
 .lx-l.locked,.lx-l.gated{opacity:.6}
 .lx-badges{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.lx-badge{font-size:.8rem;border:1px solid var(--edge2);border-radius:12px;padding:2px 9px;color:#7a84a8}.lx-badge.got{color:var(--amber);border-color:var(--amber);background:#2a2412}
+.lx-record{display:flex;flex-direction:column;gap:10px}
+.lx-rec-h{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between}
+.lx-rec-h b{color:var(--amber);letter-spacing:.04em}
+.lx-xpbar{height:10px;border:1px solid var(--edge2);border-radius:5px;overflow:hidden;background:#0f121c}
+.lx-xpbar i{display:block;height:100%;background:var(--amber);transition:width .4s ease}
+.lx-tcard{display:flex;gap:6px}
+.lx-tcard i{flex:1;min-width:0;height:32px;border:1px solid var(--edge2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:#5b6486;font-style:normal}
+.lx-tcard i.on{background:#2a2412;border-color:var(--amber);color:var(--amber)}
+.lx-tcard i.today{border-color:#7a84a8;border-style:dashed}
+.lx-badgegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:6px}
+.lx-bcard{border:1px solid var(--edge2);border-radius:6px;padding:6px 9px;color:#7a84a8;font-size:.82rem;line-height:1.35}
+.lx-bcard.got{border-color:var(--amber);background:#2a2412;color:var(--amber)}
+.lx-bcard b{display:block;font-size:.85rem}
+.lx-recstat{color:#aab3d0;margin:0}
+.lx-newrank{border:3px double var(--amber);border-radius:6px;padding:10px 14px;background:#2a2412;animation:lx-pop .5s ease}
+@keyframes lx-pop{from{transform:scale(.92);opacity:.4}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion: reduce){.lx-newrank{animation:none}.lx-xpbar i{transition:none}}
 .lx-newbadge{border:3px double var(--amber);border-radius:6px;padding:10px 14px;background:#2a2412}.lx-newbadge h4{margin:0 0 4px;color:var(--amber)}.lx-newbadge p{margin:2px 0}
 .lx-write{width:100%;box-sizing:border-box;font-family:'Cascadia Mono',Consolas,monospace;font-size:14px;line-height:1.5;background:#0b0e16;color:#d3ffe0;border:2px solid var(--edge);border-radius:6px;padding:8px 10px;white-space:pre;overflow:auto;resize:vertical;tab-size:4}.lx-write:focus{outline:2px solid var(--amber)}.lx-wnote{margin:4px 0;color:var(--muted)}
 .lx-real{border:2px dashed var(--edge2);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
@@ -464,11 +483,15 @@ code.nb{white-space:nowrap}   /* a short command like ls --help stays on one lin
     <h2 id="home-welcome">Welcome.</h2>
     <p class="home-meta" id="home-meta"></p>
     <article class="hcard quest" id="home-quest">
-      <h4>TONIGHT&rsquo;S QUEST &middot; ABOUT 20 MINUTES</h4>
+      <h4>TONIGHT&rsquo;S QUEST &middot; ABOUT 20 MINUTES &middot; +50 XP</h4>
       <div class="quest-list" id="quest-list"></div>
       <p class="qdone" id="quest-done" hidden></p>
       <div id="home-grid32"></div>
       <p class="home-meta" id="home-week"></p>
+    </article>
+    <article class="hcard" id="home-record">
+      <h4>YOUR RECORD</h4>
+      <div class="lx-record" id="record-body"></div>
     </article>
     <div class="home-grid">
       <article class="hcard">
@@ -530,6 +553,7 @@ code.nb{white-space:nowrap}   /* a short command like ls --help stays on one lin
           <li>Found a mistake? <a href="https://github.com/AlbertanCoder/hackathon-sim/issues" target="_blank" rel="noopener noreferrer">Tell us on GitHub</a> (free account needed).</li>
         </ul>
       </details>
+      <p class="home-meta">This course is free and stays free. If it helps you, you can <a href="https://ko-fi.com/albertancoder" target="_blank" rel="noopener noreferrer">support it on Ko-fi</a> - donations help pay for keeping it online and updated. Nothing is promised in return.</p>
       <div class="row"><button class="btn ghost" id="lx-back" type="button" hidden>Back to Home</button></div>
     </div>
     <div class="lx-shell" id="lx-shell" hidden>
@@ -718,6 +742,7 @@ code.nb{white-space:nowrap}   /* a short command like ls --help stays on one lin
       </div>
       <p class="status" id="data-status" role="status"></p>
     </div>
+    <p class="small-print"><a href="https://ko-fi.com/albertancoder" target="_blank" rel="noopener noreferrer">Support this course on Ko-fi</a> - optional. The course stays free; donations help pay for keeping it online and updated. Nothing is promised in return.</p>
     <div class="row"><button class="btn ghost" id="menu-done" type="button">Close settings</button></div>
   </section>
 </div>
@@ -857,6 +882,8 @@ const sfx = {
   tick(){tone(900,0.015,0.015)}, move(){tone(520,0.03,0.03)}, ok(){tone(660,0.05);tone(990,0.07,0.04,'square',0.05)},
   bump(){tone(110,0.06,0.05,'triangle')}, good(){tone(660,0.06);tone(880,0.06,0.04,'square',0.06);tone(1175,0.1,0.04,'square',0.12)},
   bad(){tone(240,0.1,0.05,'triangle');tone(170,0.16,0.05,'triangle',0.1)},
+  rank(){tone(523,0.09);tone(659,0.09,0.04,'square',0.09);tone(784,0.09,0.04,'square',0.18);tone(1047,0.2,0.05,'square',0.27)},
+  badge(){tone(880,0.07);tone(1175,0.13,0.04,'square',0.07)},
   // Each speaker gets their own blip pitch, so voices sound different while text types out.
   voice(who){ let h = 0; for (const ch of String(who)) h = (h*31 + ch.charCodeAt(0)) >>> 0; tone(who==='Shad' ? 420 : 300 + (h % 9)*45, 0.025, 0.018); },
   step(){ tone(140 + Math.random()*30, 0.02, 0.012, 'triangle'); },
@@ -3756,7 +3783,7 @@ function renderHome(){
   $('home-gnote').textContent = d ? 'Chapter '+(d.S.chapter||1)+(d.S.screen==='end' ? ', results' : d.S.screen==='pack' ? ', packing' : ', '+fmtClock(d.S.clock))+'. Continue from the Play page.'
     : h.length ? 'Best judges\u2019 score: '+Math.max(...h.map(r=>r.score||0))+' of 95. Every run rolls a new venue, AI rule and challenge.' : 'The whole weekend in under 45 minutes: team, build night, sponsors and judges.';
   $('home-play').textContent = d ? 'Continue the run' : 'Play';
-  renderQuest();
+  renderQuest(); renderRecord();
 }
 $('home-course').addEventListener('click', () => { sfx.ok(); const p = lxLoad(), m = p.at && lxFind(p.at.id), id = m && m.l.steps ? p.at.id : lxNextId(p); if (id) lxStart(id); else lxMap(); });
 $('home-play').addEventListener('click', () => { sfx.ok(); const d = loadSave(); if (d) resume(d); else goPlayMenu(); });
@@ -4329,6 +4356,13 @@ const lxWeekDays = p => { const set = new Set(p.days), d = new Date(); let n = 0
 function lxBadges(p){
   const lessons = lxAll().filter(x => x.l.steps && p.done[x.l.id]).length, st = lxStreak(p), real = Object.values(p.real).filter(Boolean).length;
   const mods = COURSE.filter(m => { const r = lxItems(m).filter(l => lxReady(l) && !l.optional); return r.length && r.every(l => p.done[l.id]); }).length;
+  const seenK = k => !!(p.seen || {})[k], QT = ['mc', 'fill', 'bug', 'write', 'cmd'];
+  let qs = 0, bugs = 0, writes = 0;
+  lxAll().forEach(x => (x.l.steps || []).forEach((s, i) => { if (seenK(x.l.id + '.' + i)){ if (s.t === 'bug') bugs++; if (s.t === 'write') writes++; if (QT.indexOf(s.t) >= 0) qs++; } }));
+  const clean = lxAll().filter(x => x.l.steps && p.done[x.l.id] && x.l.steps.every((s, i) => !(p.miss || {})[x.l.id + '.' + i])).length;
+  const finals = lxAll().filter(x => x.l.exam && !/^sec/.test(x.l.id) && p.done[x.l.id]).length;
+  const aces = Object.values(p.exam || {}).filter(e => e && (e.best || 0) >= 90).length;
+  const secItems = lxAll().filter(x => /^sec/.test(x.l.id));
   return [
     {id:'first', name:'First step', desc:'Finish your first lesson', got:lessons >= 1},
     {id:'five', name:'Getting going', desc:'Finish 5 lessons', got:lessons >= 5},
@@ -4338,7 +4372,20 @@ function lxBadges(p){
     {id:'real', name:'Hands on', desc:'Tick "I did it on my laptop" on 3 lessons', got:real >= 3},
     {id:'mod', name:'Module complete', desc:'Finish every item in any module', got:mods >= 1},
     {id:'boss', name:'Boss slayer', desc:'Beat the Claude Code boss fight', got:!!p.done['k-boss']},
-    {id:'ready', name:'Hackathon ready', desc:'Finish all '+LX_WEEKEND.length+' Weekend path lessons', got:LX_WEEKEND.every(id => p.done[id])}
+    {id:'ready', name:'Hackathon ready', desc:'Finish all '+LX_WEEKEND.length+' Weekend path lessons', got:LX_WEEKEND.every(id => p.done[id])},
+    {id:'st14', name:'Fortnight on site', desc:'A 14-day study streak (the rest day keeps it alive)', got:st >= 14},
+    {id:'st30', name:'Iron worker', desc:'A 30-day study streak (the rest day keeps it alive)', got:st >= 30},
+    {id:'real10', name:'On the tools', desc:'Tick "I did it on my laptop" on 10 lessons', got:real >= 10},
+    {id:'quest10', name:'Night shift', desc:'Bank 10 finished daily quests', got:(p.quests || []).length >= 10},
+    {id:'review10', name:'Old hand', desc:'Do a Quick review on 10 different days', got:(p.rev || []).length >= 10},
+    {id:'q500', name:'Solid hand', desc:'Answer 500 practice questions', got:qs >= 500},
+    {id:'bug10', name:'Bug hunter', desc:'Clear 10 find-the-bug steps', got:bugs >= 10},
+    {id:'write20', name:'Wordsmith', desc:'Pass 20 write-code steps', got:writes >= 20},
+    {id:'ace', name:'Clean sweep', desc:'Score 90% or better on a final test', got:aces >= 1},
+    {id:'finals', name:'All tested', desc:'Finish every final test in the nine levels', got:finals >= 9},
+    {id:'crew', name:'Crew boss', desc:'Complete 3 whole modules', got:mods >= 3},
+    {id:'safety', name:'Safety officer', desc:'Finish the optional Security track', got:secItems.length >= 10 && secItems.every(x => p.done[x.l.id])},
+    {id:'noremk', name:'No rework', desc:'Finish a lesson without missing one step', got:clean >= 1}
   ].filter(b => b.id !== 'ready' || lxHackOn());
 }
 function lxGoals(p, hide){
@@ -4396,6 +4443,44 @@ function lxWeekLine(p){   // "This week: ..." from the save and the drill scores
   const top = Math.max(0, ...Object.values(best).map(h => h && h.best || 0));
   return 'This week: ' + lessons + (lessons === 1 ? ' lesson' : ' lessons') + ' \u00b7 ' + drills + (drills === 1 ? ' drill' : ' drills') + (pitch ? ' \u00b7 pitch out loud ' + pitch + (pitch === 1 ? ' day' : ' days') : '') + (top ? ' \u00b7 best drill ' + top + '%' : '');
 }
+function renderRecord(){   // the Your Record card: rank, timecard and the badge collection
+  const p = lxLoad(), box = $('record-body'); if (!box) return;
+  box.textContent = '';
+  const xp = lxXp(p), r = lxRank(xp), st = lxStreak(p), bd = lxBadges(p), got = bd.filter(x => x.got).length;
+  const head = lxEl('div', 'lx-rec-h');
+  head.appendChild(lxEl('b', '', lxEsc(r.name.toUpperCase())));
+  head.appendChild(lxEl('span', 'lx-goal', xp+' XP'+(r.next ? ' \u00b7 '+r.need+' XP to '+r.next : ' \u00b7 top rank')));
+  box.appendChild(head);
+  const idx = LX_RANKS.findIndex(x => x[1] === r.name), lo = LX_RANKS[idx][0], hi = LX_RANKS[idx + 1] ? LX_RANKS[idx + 1][0] : lo + 1;
+  const bar = lxEl('div', 'lx-xpbar'), fill = document.createElement('i');
+  fill.style.width = (r.next ? Math.max(2, Math.min(100, Math.round(100 * (xp - lo) / (hi - lo)))) : 100)+'%';
+  bar.appendChild(fill); bar.setAttribute('role', 'img');
+  bar.setAttribute('aria-label', r.next ? r.need+' XP to go to '+r.next : 'top rank');
+  box.appendChild(bar);
+  const names = ['M', 'T', 'W', 'T', 'F', 'S', 'S'], set = new Set(p.days), now = new Date(new Date().toDateString());
+  const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const tc = lxEl('div', 'lx-tcard'); tc.setAttribute('role', 'img');
+  let shifts = 0;
+  for (let i = 0; i < 7; i++){
+    const d = new Date(mon); d.setDate(mon.getDate() + i);
+    const key = lxDayOf(d), on = set.has(key);
+    if (on) shifts++;
+    const cell = lxEl('i', (on ? 'on' : d.getTime() === now.getTime() ? 'today' : ''), on ? '\u2713' : names[i]);
+    cell.title = key + (on ? ': studied' : ''); tc.appendChild(cell);
+  }
+  tc.setAttribute('aria-label', shifts+' of 3 study days done this week');
+  box.appendChild(tc);
+  box.appendChild(lxEl('p', 'lx-goal', '<b>This week:</b> '+shifts+' of 3 study days \u00b7 streak '+st+(st === 1 ? ' day' : ' days')));
+  const doneN = Object.keys(p.done).length, real = Object.values(p.real).filter(Boolean).length;
+  box.appendChild(lxEl('p', 'lx-recstat', doneN+' items finished \u00b7 '+(p.days || []).length+' study days \u00b7 '+real+' laptop-work ticks \u00b7 '+(p.quests || []).length+' quests banked \u00b7 '+(p.rev || []).length+' review days \u00b7 badges '+got+' of '+bd.length));
+  const grid = lxEl('div', 'lx-badgegrid');
+  bd.forEach(x => {
+    const e = lxEl('div', 'lx-bcard'+(x.got ? ' got' : ''), '<b>'+(x.got ? '\u2605 ' : '\u2606 ')+lxEsc(x.name)+'</b>'+lxEsc(x.desc));
+    e.setAttribute('aria-label', x.name+(x.got ? ', earned: ' : ', locked: ')+x.desc);
+    grid.appendChild(e);
+  });
+  box.appendChild(grid);
+}
 function renderQuest(){   // the quest card on Home
   const p = lxLoad(); lxQuestClaim(p); const q = lxQuest(p), box = $('quest-list'); box.textContent = '';
   const row = (on, t) => { const d = lxEl('div', 'q' + (on ? ' on' : '')); d.innerHTML = '<span class="mk" aria-hidden="true"></span><span></span>'; d.firstChild.textContent = on ? '\u2713' : '\u25CB'; d.lastChild.textContent = t; return d; };
@@ -4409,7 +4494,7 @@ function renderQuest(){   // the quest card on Home
     box.appendChild(lab);
   } else box.appendChild(row(q.third, q.third ? '"I did it on my laptop" ticked today' : 'Do one lesson\u2019s "Try it for real" and tick "I did it on my laptop" (+50 XP)'));
   $('quest-done').hidden = !q.all;
-  $('quest-done').textContent = q.all ? '\u2605 Quest done: +50 XP. See you tomorrow.' : '';
+  $('quest-done').textContent = q.all ? '\u2605 Quest done: +50 XP banked. See you tomorrow.' : '';
   $('home-grid32').replaceChildren(...(lxHackOn() ? [lxGrid(p)] : []));   // the 32 study days lead up to 14 Nov, so only the hackathon track shows them
   $('home-week').textContent = lxWeekLine(p);
 }
@@ -4807,9 +4892,9 @@ function lxDone(){
   lxSideDraw();
   $('lx-step').textContent = LX.review ? 'REVIEW DONE' : LX.term ? 'PROJECT DONE' : 'LESSON DONE'; $('lx-prog').style.width = '100%';
   b.appendChild(lxEl('h4', '', LX.review ? 'Review done.' : '\u2713 '+lxEsc(LX.l.name)+': done.'));
-  if (!LX.review){ const gain = LX.l.proj ? 150 : 100, rk = lxRank(lxXp(p)), r0 = lxRank(lxXp(p) - gain); b.appendChild(lxEl('p', 'lx-xp', '<b>+'+gain+' XP</b> · '+lxEsc(lxRankLine(p))+(rk.name !== r0.name ? ' · <b>NEW RANK: '+lxEsc(rk.name)+'</b>' : ''))); }
+  if (!LX.review){ const gain = LX.l.proj ? 150 : 100, rk = lxRank(lxXp(p)), r0 = lxRank(lxXp(p) - gain); b.appendChild(lxEl('p', 'lx-xp', '<b>+'+gain+' XP</b> · '+lxEsc(lxRankLine(p)))); if (rk.name !== r0.name){ sfx.rank(); const rr = lxEl('div', 'lx-newrank', '<h4>\u2605 NEW RANK: '+lxEsc(rk.name.toUpperCase())+'</h4>'); rr.appendChild(lxEl('p', '', 'You climbed from '+lxEsc(r0.name)+' to '+lxEsc(rk.name)+'.'+(rk.next ? ' '+rk.need+' XP to '+rk.next+'.' : ' That is the top rank.'))); b.appendChild(rr); } }
   (LX.review ? ['Steps you miss come back in the next review more often.'] : LX.l.recap || []).forEach(t => b.appendChild(lxEl('p', '', lxFmt(t))));
-  { const nb = lxBadges(p).filter(b => b.got && !bBefore.includes(b.id)); if (nb.length){ const bx = lxEl('div', 'lx-newbadge', '<h4>\u2605 BADGE EARNED</h4>'); nb.forEach(b => bx.appendChild(lxEl('p', '', '<b>'+lxEsc(b.name)+'</b>: '+lxEsc(b.desc)))); b.appendChild(bx); } }
+  { const nb = lxBadges(p).filter(b => b.got && !bBefore.includes(b.id)); if (nb.length){ sfx.badge(); const bx = lxEl('div', 'lx-newbadge', '<h4>\u2605 BADGE EARNED</h4>'); nb.forEach(b => bx.appendChild(lxEl('p', '', '<b>'+lxEsc(b.name)+'</b>: '+lxEsc(b.desc)))); b.appendChild(bx); } }
   if (!LX.review && LX.l.real){
     const r = lxEl('div', 'lx-real', '<h4>TRY IT FOR REAL (OPTIONAL)</h4>');
     LX.l.real.forEach(t => r.appendChild(lxEl('p', '', lxFmt(t))));
